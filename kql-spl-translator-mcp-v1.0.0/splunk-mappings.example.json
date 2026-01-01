@@ -1,0 +1,52 @@
+{
+  "_comment": "This is an example mapping file. Copy to 'splunk-mappings.json' and customize for your environment.",
+  "_comment2": "The server will auto-load splunk-mappings.json if it exists in the same directory.",
+  
+  "SigninLogs": {
+    "index": "azure",
+    "sourcetype": "azure:eventhub:aad:signin",
+    "note": "Azure AD sign-in logs via Event Hub"
+  },
+  
+  "AuditLogs": {
+    "index": "azure",
+    "sourcetype": "azure:eventhub:aad:audit",
+    "note": "Azure AD audit logs"
+  },
+  
+  "SecurityEvent": {
+    "index": "windows",
+    "sourcetype": "azure:eventhub:windows:security",
+    "note": "Windows Security events"
+  },
+  
+  "DeviceProcessEvents": {
+    "index": "defender",
+    "sourcetype": "azure:eventhub:mde:process",
+    "note": "Defender for Endpoint process events"
+  },
+  
+  "DeviceNetworkEvents": {
+    "index": "defender",
+    "sourcetype": "azure:eventhub:mde:network",
+    "note": "Defender for Endpoint network events"
+  },
+  
+  "DeviceFileEvents": {
+    "index": "defender",
+    "sourcetype": "azure:eventhub:mde:file",
+    "note": "Defender for Endpoint file events"
+  },
+  
+  "EmailEvents": {
+    "index": "o365",
+    "sourcetype": "azure:eventhub:o365:email",
+    "note": "Office 365 email events"
+  },
+  
+  "OfficeActivity": {
+    "index": "o365",
+    "sourcetype": "azure:eventhub:o365:activity",
+    "note": "Office 365 activity logs"
+  }
+}

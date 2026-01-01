@@ -1,0 +1,261 @@
+{
+  "spl_commands": {
+    "chart": {
+      "description": "Returns results in a tabular output for (time-series) charting",
+      "syntax": "chart <stats-agg-function> [by <field>]",
+      "kql_equivalent": "summarize",
+      "category": "reporting"
+    },
+    "timechart": {
+      "description": "Returns results in a tabular output for time-series charting",
+      "syntax": "timechart [span=<time>] <stats-agg-function> [by <field>]",
+      "kql_equivalent": "summarize bin(TimeGenerated, <timespan>)",
+      "category": "reporting"
+    },
+    "dedup": {
+      "description": "Removes subsequent results that match a specified criterion",
+      "syntax": "dedup <field-list>",
+      "kql_equivalent": "distinct",
+      "category": "filtering"
+    },
+    "eval": {
+      "description": "Calculates an expression",
+      "syntax": "eval <field>=<expression>",
+      "kql_equivalent": "extend",
+      "category": "field_manipulation"
+    },
+    "fields": {
+      "description": "Removes fields from search results",
+      "syntax": "fields [+|-] <field-list>",
+      "kql_equivalent": "project",
+      "category": "field_manipulation"
+    },
+    "head": {
+      "description": "Returns the first N results",
+      "syntax": "head <n>",
+      "kql_equivalent": "take",
+      "category": "limiting"
+    },
+    "tail": {
+      "description": "Returns the last N results",
+      "syntax": "tail <n>",
+      "kql_equivalent": "top by timestamp desc | take",
+      "category": "limiting"
+    },
+    "lookup": {
+      "description": "Adds field values from an external source",
+      "syntax": "lookup <lookup-table> <field-list> [output <field-list>]",
+      "kql_equivalent": "join kind=leftouter",
+      "category": "enrichment"
+    },
+    "rename": {
+      "description": "Renames a field",
+      "syntax": "rename <old-field> as <new-field>",
+      "kql_equivalent": "project-rename",
+      "category": "field_manipulation"
+    },
+    "rex": {
+      "description": "Specifies regular expression named groups to extract fields",
+      "syntax": "rex field=<field> \"<regex>\"",
+      "kql_equivalent": "parse / extract",
+      "category": "extraction"
+    },
+    "search": {
+      "description": "Filters results to those that match the search expression",
+      "syntax": "search <search-expression>",
+      "kql_equivalent": "where",
+      "category": "filtering"
+    },
+    "sort": {
+      "description": "Sorts the search results by the specified fields",
+      "syntax": "sort [+|-] <field-list>",
+      "kql_equivalent": "order by / sort by",
+      "category": "ordering"
+    },
+    "stats": {
+      "description": "Provides statistics, grouped optionally by fields",
+      "syntax": "stats <stats-function> [by <field-list>]",
+      "kql_equivalent": "summarize",
+      "category": "aggregation"
+    },
+    "mstats": {
+      "description": "Similar to stats but used on metrics instead of events",
+      "syntax": "mstats <stats-function> WHERE <conditions> [by <field-list>] [span=<time>]",
+      "kql_equivalent": "summarize on metrics",
+      "category": "metrics"
+    },
+    "table": {
+      "description": "Specifies fields to keep in the result set",
+      "syntax": "table <field-list>",
+      "kql_equivalent": "project",
+      "category": "field_manipulation"
+    },
+    "top": {
+      "description": "Displays the most common values of a field",
+      "syntax": "top [limit=<n>] <field>",
+      "kql_equivalent": "summarize count() by field | top n by count_ desc",
+      "category": "aggregation"
+    },
+    "rare": {
+      "description": "Displays the least common values of a field",
+      "syntax": "rare [limit=<n>] <field>",
+      "kql_equivalent": "summarize count() by field | top n by count_ asc",
+      "category": "aggregation"
+    },
+    "transaction": {
+      "description": "Groups search results into transactions",
+      "syntax": "transaction <field-list> [maxspan=<time>] [maxpause=<time>]",
+      "kql_equivalent": "Complex - requires make-series or custom logic",
+      "category": "grouping"
+    },
+    "where": {
+      "description": "Filters search results using eval expressions",
+      "syntax": "where <eval-expression>",
+      "kql_equivalent": "where",
+      "category": "filtering"
+    },
+    "mvexpand": {
+      "description": "Create new results for each value of a multivalue field",
+      "syntax": "mvexpand <field>",
+      "kql_equivalent": "mv-expand",
+      "category": "array_manipulation"
+    },
+    "spath": {
+      "description": "Extracts fields from JSON or XML data",
+      "syntax": "spath [input=<field>] [output=<field>] path=<path>",
+      "kql_equivalent": "extend field = tostring(json.path) or parse_json",
+      "category": "extraction"
+    },
+    "eventstats": {
+      "description": "Compute the overall aggregate statistics and add as new fields",
+      "syntax": "eventstats <stats-function> [by <field-list>]",
+      "kql_equivalent": "join kind=inner (summarize...) on key",
+      "category": "aggregation"
+    },
+    "streamstats": {
+      "description": "Computes running statistics",
+      "syntax": "streamstats <stats-function>",
+      "kql_equivalent": "serialize | extend running_total = row_cumsum(field)",
+      "category": "aggregation"
+    },
+    "cluster": {
+      "description": "Cluster results together",
+      "syntax": "cluster [t=<threshold>] [showcount=<bool>]",
+      "kql_equivalent": "No direct equivalent - requires custom clustering logic",
+      "category": "analysis"
+    },
+    "reverse": {
+      "description": "Reverse the order of a result set",
+      "syntax": "reverse",
+      "kql_equivalent": "order by <timestamp_field> desc",
+      "category": "ordering"
+    },
+    "accum": {
+      "description": "Save the running total in a field",
+      "syntax": "accum <field> as <newfield>",
+      "kql_equivalent": "serialize | extend running = row_cumsum(field)",
+      "category": "calculation"
+    },
+    "delta": {
+      "description": "Compute difference between current and previous value",
+      "syntax": "delta <field> as <newfield>",
+      "kql_equivalent": "serialize | extend delta = field - prev(field)",
+      "category": "calculation"
+    },
+    "inputlookup": {
+      "description": "Read in a lookup table",
+      "syntax": "inputlookup <lookup-table>",
+      "kql_equivalent": "externaldata or lookup table reference",
+      "category": "data_source"
+    },
+    "outputlookup": {
+      "description": "Write search results to a lookup file",
+      "syntax": "outputlookup <filename>",
+      "kql_equivalent": "No direct equivalent - use .set or external export",
+      "category": "output"
+    },
+    "nomv": {
+      "description": "Combine multiple values of a field into a single value",
+      "syntax": "nomv <field>",
+      "kql_equivalent": "extend field = strcat_array(field, ',')",
+      "category": "array_manipulation"
+    },
+    "makemv": {
+      "description": "Separate values into multiple field values",
+      "syntax": "makemv [delim=<delimiter>] <field>",
+      "kql_equivalent": "extend field = split(field, delimiter)",
+      "category": "array_manipulation"
+    }
+  },
+  "spl_eval_functions": {
+    "abs": "abs",
+    "case": "case",
+    "ceil": "ceiling",
+    "cidrmatch": "ipv4_is_in_range",
+    "coalesce": "coalesce",
+    "cos": "cos",
+    "exp": "exp",
+    "if": "iif / iff",
+    "in": "in",
+    "isbool": "gettype(field) == 'bool'",
+    "isint": "gettype(field) == 'long' or 'int'",
+    "isnull": "isnull",
+    "isstr": "gettype(field) == 'string'",
+    "len": "strlen",
+    "like": "matches regex or contains",
+    "log": "log",
+    "lower": "tolower",
+    "ltrim": "trim_start",
+    "match": "matches regex",
+    "max": "max_of",
+    "md5": "hash_md5",
+    "min": "min_of",
+    "mvcount": "array_length",
+    "mvfilter": "array_sort_asc / array_sort_desc with filter",
+    "mvindex": "array element access [index]",
+    "mvjoin": "strcat_array",
+    "now": "now",
+    "null": "dynamic(null)",
+    "nullif": "iif(x==y, dynamic(null), x)",
+    "random": "rand",
+    "relative_time": "datetime arithmetic with ago() or datetime_add()",
+    "replace": "replace_string / replace_regex",
+    "round": "round",
+    "rtrim": "trim_end",
+    "split": "split",
+    "sqrt": "sqrt",
+    "strftime": "format_datetime",
+    "strptime": "todatetime with format",
+    "substr": "substring",
+    "time": "now",
+    "tonumber": "todouble / tolong / toint",
+    "tostring": "tostring",
+    "typeof": "gettype",
+    "urldecode": "url_decode",
+    "validate": "Complex case statement"
+  },
+  "spl_stats_functions": {
+    "avg": "avg",
+    "count": "count",
+    "dc": "dcount",
+    "earliest": "arg_min(timestamp, field)",
+    "latest": "arg_max(timestamp, field)",
+    "max": "max",
+    "median": "percentile(field, 50)",
+    "min": "min",
+    "mode": "No direct equivalent - use topmost aggregation",
+    "perc": "percentile",
+    "range": "max(field) - min(field)",
+    "stdev": "stdev",
+    "stdevp": "stdevp",
+    "sum": "sum",
+    "sumsq": "sumif with square calculation",
+    "values": "make_set",
+    "var": "variance"
+  },
+  "spl_time_modifiers": {
+    "earliest": "TimeGenerated >= ago() or >= datetime()",
+    "latest": "TimeGenerated <= ago() or <= datetime()",
+    "snap_to_time": "bin() or startofday/hour/etc functions"
+  }
+}
