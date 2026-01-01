@@ -1,0 +1,298 @@
+{
+  "kql_operators": {
+    "where": {
+      "description": "Filters on a specific predicate",
+      "syntax": "T | where Predicate",
+      "spl_equivalent": "search or where",
+      "category": "filtering",
+      "examples": ["SecurityEvent | where EventID == 4625"]
+    },
+    "extend": {
+      "description": "Creates a calculated column and adds it to the result set",
+      "syntax": "T | extend [ColumnName =] Expression",
+      "spl_equivalent": "eval",
+      "category": "field_manipulation",
+      "examples": ["| extend velocity=distance/time"]
+    },
+    "project": {
+      "description": "Select columns to include, rename or drop, and insert new computed columns",
+      "syntax": "T | project Column1, Column2, ...",
+      "spl_equivalent": "table or fields",
+      "category": "field_manipulation",
+      "examples": ["| project TimeGenerated, EventID, Computer"]
+    },
+    "summarize": {
+      "description": "Groups rows and calculates aggregations over each group",
+      "syntax": "T | summarize Aggregation [by GroupExpression]",
+      "spl_equivalent": "stats or chart",
+      "category": "aggregation",
+      "examples": ["| summarize count() by Computer"]
+    },
+    "order by": {
+      "description": "Sort rows by one or more columns",
+      "syntax": "T | order by Column [asc|desc]",
+      "spl_equivalent": "sort",
+      "category": "ordering",
+      "examples": ["| order by TimeGenerated desc"]
+    },
+    "sort by": {
+      "description": "Sort rows by one or more columns (synonym of order by)",
+      "syntax": "T | sort by Column [asc|desc]",
+      "spl_equivalent": "sort",
+      "category": "ordering",
+      "examples": ["| sort by EventID asc"]
+    },
+    "take": {
+      "description": "Returns up to the specified number of rows",
+      "syntax": "T | take NumberOfRows",
+      "spl_equivalent": "head",
+      "category": "limiting",
+      "examples": ["| take 100"]
+    },
+    "limit": {
+      "description": "Returns up to the specified number of rows (synonym of take)",
+      "syntax": "T | limit NumberOfRows",
+      "spl_equivalent": "head",
+      "category": "limiting",
+      "examples": ["| limit 100"]
+    },
+    "top": {
+      "description": "Returns the first N rows sorted by specified columns",
+      "syntax": "T | top N by Column [asc|desc]",
+      "spl_equivalent": "head after sort",
+      "category": "limiting",
+      "examples": ["| top 10 by Count desc"]
+    },
+    "distinct": {
+      "description": "Produces table with distinct combination of columns",
+      "syntax": "T | distinct Column1, Column2, ...",
+      "spl_equivalent": "dedup",
+      "category": "filtering",
+      "examples": ["| distinct Computer, EventID"]
+    },
+    "count": {
+      "description": "Counts records in the input table",
+      "syntax": "T | count",
+      "spl_equivalent": "stats count",
+      "category": "aggregation",
+      "examples": ["SecurityEvent | count"]
+    },
+    "join": {
+      "description": "Merges rows of two tables by matching specified columns",
+      "syntax": "LeftTable | join [kind=...] (RightTable) on Attributes",
+      "spl_equivalent": "join or lookup",
+      "category": "combining",
+      "examples": ["Table1 | join kind=inner (Table2) on UserName"]
+    },
+    "union": {
+      "description": "Takes two or more tables and returns all their rows",
+      "syntax": "[T1] | union [T2], [T3], ...",
+      "spl_equivalent": "Multiple searches with append",
+      "category": "combining",
+      "examples": ["SecurityEvent | union SigninLogs"]
+    },
+    "mv-expand": {
+      "description": "Turns dynamic arrays into rows (multi-value expansion)",
+      "syntax": "T | mv-expand Column",
+      "spl_equivalent": "mvexpand",
+      "category": "array_manipulation",
+      "examples": ["| mv-expand properties.targetResources"]
+    },
+    "parse": {
+      "description": "Evaluates string expression and parses value into calculated columns",
+      "syntax": "T | parse [kind=regex|simple] Expression with Pattern",
+      "spl_equivalent": "rex",
+      "category": "extraction",
+      "examples": ["| parse _raw with * \"Code=<\" Code:string"]
+    },
+    "project-away": {
+      "description": "Select columns to exclude from output",
+      "syntax": "T | project-away Column1, Column2, ...",
+      "spl_equivalent": "fields -",
+      "category": "field_manipulation",
+      "examples": ["| project-away TenantId, SourceSystem"]
+    },
+    "project-rename": {
+      "description": "Renames columns in result output",
+      "syntax": "T | project-rename NewName = OldName",
+      "spl_equivalent": "rename",
+      "category": "field_manipulation",
+      "examples": ["| project-rename IPAddress = _ip"]
+    },
+    "search": {
+      "description": "Searches all columns in table for the value",
+      "syntax": "T | search SearchPredicate",
+      "spl_equivalent": "search",
+      "category": "filtering",
+      "examples": ["| search \"error\""]
+    },
+    "make-series": {
+      "description": "Creates series of specified aggregated values along axis",
+      "syntax": "T | make-series Aggregation on AxisColumn from start to end step step",
+      "spl_equivalent": "timechart with fillnull",
+      "category": "time_series",
+      "examples": ["| make-series count() default=0 on TimeGenerated from ago(1d) to now() step 1h"]
+    },
+    "let": {
+      "description": "Binds name to expressions",
+      "syntax": "let Name = Expression;",
+      "spl_equivalent": "No direct equivalent - use eval or subsearch",
+      "category": "variable",
+      "examples": ["let threshold = 100;"]
+    },
+    "range": {
+      "description": "Generates table with arithmetic series of values",
+      "syntax": "range columnName from start to stop step step",
+      "spl_equivalent": "No direct equivalent",
+      "category": "generation",
+      "examples": ["range x from 1 to 100 step 1"]
+    },
+    "serialize": {
+      "description": "Marks result set as serialized for window functions",
+      "syntax": "T | serialize",
+      "spl_equivalent": "streamstats",
+      "category": "windowing",
+      "examples": ["| serialize | extend row_num = row_number()"]
+    }
+  },
+  "kql_scalar_functions": {
+    "string_functions": {
+      "strcat": "String concatenation - SPL: . operator",
+      "strlen": "String length - SPL: len()",
+      "substring": "Extract substring - SPL: substr()",
+      "tolower": "Convert to lowercase - SPL: lower()",
+      "toupper": "Convert to uppercase - SPL: upper()",
+      "trim": "Trim whitespace - SPL: ltrim() + rtrim()",
+      "trim_start": "Trim left - SPL: ltrim()",
+      "trim_end": "Trim right - SPL: rtrim()",
+      "split": "Split string - SPL: split()",
+      "replace_string": "Replace string - SPL: replace()",
+      "replace_regex": "Replace with regex - SPL: replace()",
+      "extract": "Extract with regex - SPL: rex",
+      "parse_json": "Parse JSON - SPL: spath",
+      "tostring": "Convert to string - SPL: tostring()",
+      "base64_encode_tostring": "Base64 encode - SPL: No direct equivalent",
+      "base64_decode_tostring": "Base64 decode - SPL: No direct equivalent",
+      "url_encode": "URL encode - SPL: No direct equivalent",
+      "url_decode": "URL decode - SPL: urldecode()"
+    },
+    "datetime_functions": {
+      "ago": "Time in past - SPL: relative_time(now(), \"-time\")",
+      "now": "Current time - SPL: now()",
+      "datetime_add": "Add time - SPL: relative_time()",
+      "datetime_diff": "Time difference - SPL: Arithmetic on epoch times",
+      "format_datetime": "Format datetime - SPL: strftime()",
+      "todatetime": "Parse datetime - SPL: strptime()",
+      "startofday": "Start of day - SPL: relative_time with @d",
+      "startofweek": "Start of week - SPL: relative_time with @w",
+      "startofmonth": "Start of month - SPL: relative_time with @mon",
+      "startofyear": "Start of year - SPL: relative_time with @y",
+      "endofday": "End of day - SPL: relative_time",
+      "endofweek": "End of week - SPL: relative_time",
+      "endofmonth": "End of month - SPL: relative_time",
+      "endofyear": "End of year - SPL: relative_time",
+      "dayofweek": "Day of week - SPL: strftime with %w",
+      "dayofmonth": "Day of month - SPL: strftime with %d",
+      "dayofyear": "Day of year - SPL: strftime with %j",
+      "hourofday": "Hour of day - SPL: strftime with %H",
+      "getmonth": "Month number - SPL: strftime with %m",
+      "getyear": "Year - SPL: strftime with %Y",
+      "weekofyear": "Week of year - SPL: strftime with %U or %W",
+      "bin": "Time bucketing - SPL: bucket or bin in timechart span"
+    },
+    "conversion_functions": {
+      "tobool": "Convert to boolean - SPL: if() logic",
+      "todouble": "Convert to double - SPL: tonumber()",
+      "toint": "Convert to integer - SPL: tonumber()",
+      "tolong": "Convert to long - SPL: tonumber()",
+      "tostring": "Convert to string - SPL: tostring()",
+      "toguid": "Convert to GUID - SPL: No direct equivalent",
+      "totimespan": "Convert to timespan - SPL: Time arithmetic"
+    },
+    "mathematical_functions": {
+      "abs": "Absolute value - SPL: abs()",
+      "ceiling": "Round up - SPL: ceil()",
+      "floor": "Round down - SPL: floor()",
+      "round": "Round - SPL: round()",
+      "exp": "e^x - SPL: exp()",
+      "log": "Logarithm - SPL: log()",
+      "log10": "Log base 10 - SPL: log(x, 10)",
+      "log2": "Log base 2 - SPL: log(x, 2)",
+      "pow": "Power - SPL: pow()",
+      "sqrt": "Square root - SPL: sqrt()",
+      "cos": "Cosine - SPL: cos()",
+      "sin": "Sine - SPL: sin()",
+      "tan": "Tangent - SPL: tan()",
+      "sign": "Sign of number - SPL: if(x>0, 1, if(x<0, -1, 0))"
+    },
+    "conditional_functions": {
+      "iif": "Inline if - SPL: if()",
+      "iff": "Inline if (synonym) - SPL: if()",
+      "case": "Multi-condition - SPL: case()",
+      "max_of": "Maximum of values - SPL: max()",
+      "min_of": "Minimum of values - SPL: min()"
+    },
+    "null_functions": {
+      "isnull": "Check if null - SPL: isnull()",
+      "isnotnull": "Check if not null - SPL: NOT isnull()",
+      "isempty": "Check if empty - SPL: len(field)==0",
+      "isnotempty": "Check if not empty - SPL: len(field)>0",
+      "coalesce": "First non-null - SPL: coalesce()"
+    },
+    "array_functions": {
+      "array_length": "Array length - SPL: mvcount()",
+      "array_concat": "Concatenate arrays - SPL: mvappend()",
+      "array_sort_asc": "Sort ascending - SPL: mvsort()",
+      "array_sort_desc": "Sort descending - SPL: No direct equivalent",
+      "pack_array": "Create array - SPL: No direct equivalent",
+      "strcat_array": "Join array - SPL: mvjoin()",
+      "set_difference": "Array difference - SPL: Complex mvfilter",
+      "set_intersect": "Array intersection - SPL: Complex mvfilter"
+    },
+    "json_functions": {
+      "parse_json": "Parse JSON string - SPL: spath",
+      "todynamic": "Parse to dynamic - SPL: spath",
+      "bag_keys": "Get JSON keys - SPL: spath path extraction",
+      "bag_remove_keys": "Remove keys - SPL: Complex spath manipulation"
+    },
+    "aggregation_functions": {
+      "count": "Count rows - SPL: count()",
+      "dcount": "Distinct count - SPL: dc()",
+      "sum": "Sum - SPL: sum()",
+      "avg": "Average - SPL: avg()",
+      "min": "Minimum - SPL: min()",
+      "max": "Maximum - SPL: max()",
+      "stdev": "Standard deviation - SPL: stdev()",
+      "stdevp": "Population std dev - SPL: stdevp()",
+      "variance": "Variance - SPL: var()",
+      "percentile": "Percentile - SPL: perc<X>()",
+      "make_set": "Distinct values - SPL: values()",
+      "make_list": "All values - SPL: list() or values()",
+      "arg_max": "Row with max value - SPL: Complex stats",
+      "arg_min": "Row with min value - SPL: Complex stats"
+    },
+    "ip_functions": {
+      "ipv4_is_match": "IP matches CIDR - SPL: cidrmatch()",
+      "ipv4_is_in_range": "IP in range - SPL: cidrmatch()",
+      "parse_ipv4": "Parse IP - SPL: rex or spath",
+      "format_ipv4": "Format IP - SPL: printf or eval"
+    },
+    "hash_functions": {
+      "hash": "Hash value - SPL: No direct equivalent",
+      "hash_md5": "MD5 hash - SPL: md5()",
+      "hash_sha256": "SHA256 hash - SPL: sha256() in some versions"
+    }
+  },
+  "kql_time_functions": {
+    "ago": {
+      "description": "Subtract timespan from current UTC time",
+      "syntax": "ago(timespan)",
+      "spl_equivalent": "earliest=-<time> or relative_time(now(), \"-time\")"
+    },
+    "bin": {
+      "description": "Rounds values down to datetime multiple of bin size",
+      "syntax": "bin(value, roundTo)",
+      "spl_equivalent": "bucket or span in timechart"
+    }
+  }
+}
