@@ -4,7 +4,7 @@
  * Tests the translator against production-grade queries from the community
  */
 
-const QueryTranslator = require('./enhanced-translator.js');
+import { QueryTranslator } from './enhanced-translator.js';
 
 class KQLSearchTest {
   constructor() {

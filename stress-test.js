@@ -4,7 +4,7 @@
  * Attempts to break the translator with edge cases and extreme scenarios
  */
 
-const QueryTranslator = require('./enhanced-translator.js');
+import { QueryTranslator } from './enhanced-translator.js';
 
 class StressTest {
   constructor() {

@@ -4,7 +4,7 @@
  * Tests if the translated queries are semantically correct
  */
 
-const QueryTranslator = require('./enhanced-translator.js');
+import { QueryTranslator } from './enhanced-translator.js';
 
 class ValidationTest {
   constructor() {
